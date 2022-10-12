@@ -11,16 +11,16 @@ public abstract class CommonConfigFileLoader<P extends Enum<P>> {
     private static final String CONFIG_FOLDER = "/config";
 
     public enum CommonProjectConfiguration {
-        RADARR_API_KEY,
-        RADARR_API_HOST,
-        SONARR_API_KEY,
         SONARR_API_HOST,
-        PLEX_TOKEN,
+        SONARR_API_KEY,
+        SONARR_PATHS_STARTER,
+        RADARR_API_HOST,
+        RADARR_API_KEY,
         PLEX_HOST,
+        PLEX_TOKEN,
         PLEX_SECTIONS_LIST_URI,
         PLEX_SECTION_REFRESH_URI,
-        SONARR_PATHS_STARTER,
-        PLEX_PATHS_STARTER
+        PLEX_SERIES_PATHS_STARTER
     }
     private EnumMap<CommonProjectConfiguration, String> commonConfigurationsMap;
 

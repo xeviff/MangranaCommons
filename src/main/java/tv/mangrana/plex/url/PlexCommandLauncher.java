@@ -66,7 +66,7 @@ public class PlexCommandLauncher {
         Pattern p = Pattern.compile(config.getCommonConfig(SONARR_PATHS_STARTER).concat("(.+/.+ \\(\\d{4}\\))"));
         Matcher m = p.matcher(fullDestinationPath);
         if (m.find()) {
-            String pathInPlexDockerStart = config.getCommonConfig(PLEX_PATHS_STARTER);
+            String pathInPlexDockerStart = config.getCommonConfig(PLEX_SERIES_PATHS_STARTER);
             return pathInPlexDockerStart.concat(m.group(1));
         }
         return null;

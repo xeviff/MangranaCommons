@@ -1,7 +1,7 @@
 package tv.mangrana.plex.url;
 
 
-import tv.mangrana.config.ConfigFileLoader;
+import tv.mangrana.config.CommonConfigFileLoader;
 import tv.mangrana.utils.Output;
 import com.sun.org.apache.xerces.internal.dom.DeferredElementImpl;
 import org.w3c.dom.Document;
@@ -13,20 +13,20 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import static tv.mangrana.config.ConfigFileLoader.ProjectConfiguration.PLEX_PATHS_STARTER;
+import static tv.mangrana.config.CommonConfigFileLoader.CommonProjectConfiguration.PLEX_PATHS_STARTER;
 
 public class PlexLibrarySectionsResolver {
 
     private final PlexCommandLauncher commandLauncher;
-    private final ConfigFileLoader config;
+    private final CommonConfigFileLoader<?> config;
 
-    public PlexLibrarySectionsResolver(PlexCommandLauncher commandLauncher, ConfigFileLoader config) {
+    public PlexLibrarySectionsResolver(PlexCommandLauncher commandLauncher, CommonConfigFileLoader<?> config) {
         this.commandLauncher = commandLauncher;
         this.config = config;
     }
 
     public String resolveSectionByPath(String fullDestinationPath) {
-        final String plexPathStarter = config.getConfig(PLEX_PATHS_STARTER);
+        final String plexPathStarter = config.getCommonConfig(PLEX_PATHS_STARTER);
         String keyFolder = fullDestinationPath.replaceFirst(plexPathStarter,"").split("/")[1];
         Document xmlDocument = commandLauncher.retrieveSectionsInfo();
         XPath xPath = XPathFactory.newInstance().newXPath();

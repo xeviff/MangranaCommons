@@ -1,13 +1,13 @@
 package tv.mangrana.radarr.api.client.gateway;
 
-import tv.mangrana.config.ConfigFileLoader;
+import tv.mangrana.config.CommonConfigFileLoader;
 import tv.mangrana.radarr.api.schema.command.RefreshMoviesCommand;
 import tv.mangrana.radarr.api.schema.movie.MovieResource;
 import tv.mangrana.radarr.api.schema.queue.QueueResourcePagingResource;
 import tv.mangrana.utils.rest.APIProxyBuilderSingleton;
 
-import static tv.mangrana.config.ConfigFileLoader.ProjectConfiguration.RADARR_API_HOST;
-import static tv.mangrana.config.ConfigFileLoader.ProjectConfiguration.RADARR_API_KEY;
+import static tv.mangrana.config.CommonConfigFileLoader.CommonProjectConfiguration.RADARR_API_HOST;
+import static tv.mangrana.config.CommonConfigFileLoader.CommonProjectConfiguration.RADARR_API_KEY;
 import static tv.mangrana.utils.Output.log;
 
 public class RadarrApiGateway {
@@ -15,9 +15,9 @@ public class RadarrApiGateway {
     private final String apiKey;
     private final RadarrAPIInterface proxy;
 
-    public RadarrApiGateway(ConfigFileLoader config) {
-        apiKey = config.getConfig(RADARR_API_KEY);
-        proxy = APIProxyBuilderSingleton.getRadarrInterface(config.getConfig(RADARR_API_HOST));
+    public RadarrApiGateway(CommonConfigFileLoader<?> config) {
+        apiKey = config.getCommonConfig(RADARR_API_KEY);
+        proxy = APIProxyBuilderSingleton.getRadarrInterface(config.getCommonConfig(RADARR_API_HOST));
     }
 
     public QueueResourcePagingResource getQueue() {

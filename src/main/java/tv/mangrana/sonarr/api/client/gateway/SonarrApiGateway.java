@@ -1,6 +1,6 @@
 package tv.mangrana.sonarr.api.client.gateway;
 
-import tv.mangrana.config.ConfigFileLoader;
+import tv.mangrana.config.CommonConfigFileLoader;
 import tv.mangrana.sonarr.api.schema.command.RefreshSerieCommand;
 import tv.mangrana.sonarr.api.schema.history.SonarrHistory;
 import tv.mangrana.sonarr.api.schema.queue.SonarrQueue;
@@ -9,8 +9,8 @@ import tv.mangrana.utils.EasyLogger;
 import tv.mangrana.utils.Output;
 import tv.mangrana.utils.rest.APIProxyBuilderSingleton;
 
-import static tv.mangrana.config.ConfigFileLoader.ProjectConfiguration.SONARR_API_HOST;
-import static tv.mangrana.config.ConfigFileLoader.ProjectConfiguration.SONARR_API_KEY;
+import static tv.mangrana.config.CommonConfigFileLoader.CommonProjectConfiguration.SONARR_API_HOST;
+import static tv.mangrana.config.CommonConfigFileLoader.CommonProjectConfiguration.SONARR_API_KEY;
 
 public class SonarrApiGateway {
 
@@ -18,9 +18,9 @@ public class SonarrApiGateway {
     private final SonarrAPIInterface proxy;
     private final EasyLogger logger;
 
-    public SonarrApiGateway(ConfigFileLoader config) {
-        apiKey = config.getConfig(SONARR_API_KEY);
-        proxy = APIProxyBuilderSingleton.getSonarrInterface(config.getConfig(SONARR_API_HOST));
+    public SonarrApiGateway(CommonConfigFileLoader<?> config) {
+        apiKey = config.getCommonConfig(SONARR_API_KEY);
+        proxy = APIProxyBuilderSingleton.getSonarrInterface(config.getCommonConfig(SONARR_API_HOST));
         logger = new EasyLogger();
     }
 

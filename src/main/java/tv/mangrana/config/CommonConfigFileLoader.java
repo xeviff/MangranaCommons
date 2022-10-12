@@ -27,7 +27,6 @@ public abstract class CommonConfigFileLoader<P extends Enum<P>> {
     private final Class<P> projectConfigEnumType;
     private EnumMap<P, String> configurationsMap;
 
-
     public CommonConfigFileLoader(Class<P> projectConfigEnumType) throws IncorrectWorkingReferencesException {
         this.projectConfigEnumType = projectConfigEnumType;
         loadAllConfigFromFile(false);
@@ -37,12 +36,8 @@ public abstract class CommonConfigFileLoader<P extends Enum<P>> {
     }
     
     private CommonConfigFileLoader<P> loadAllConfigFromFile(boolean silently) throws IncorrectWorkingReferencesException {
-        commonConfigurationsMap = new EnumMap<>(CommonProjectConfiguration.class);
-        commonConfigurationsMap.putAll( loadFromFile(CommonProjectConfiguration.class, silently) );
-
-        configurationsMap = new EnumMap<>(projectConfigEnumType);
-        configurationsMap.putAll( loadFromFile(projectConfigEnumType, silently) );
-        
+        commonConfigurationsMap = loadFromFile(CommonProjectConfiguration.class, silently);
+        configurationsMap = loadFromFile(projectConfigEnumType, silently);
         return this;
     }
 
@@ -56,7 +51,7 @@ public abstract class CommonConfigFileLoader<P extends Enum<P>> {
     public String getConfig(P key) {
         return configurationsMap.get(key);
     }
-    public String getCommonConfig(CommonProjectConfiguration key) {
+    public String getConfig(CommonProjectConfiguration key) {
         return commonConfigurationsMap.get(key);
     }
 

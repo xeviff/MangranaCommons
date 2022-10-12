@@ -50,11 +50,11 @@ public class PlexCommandLauncher {
             HttpUriRequest httpGET = RequestBuilder.get()
                     .setUri(new URI(plexRefreshURL))
                     .addParameter("path", plexPathToRefresh)
-                    .addParameter("X-Plex-Token", config.getCommonConfig(PLEX_TOKEN))
+                    .addParameter("X-Plex-Token", config.getConfig(PLEX_TOKEN))
                     .build();
             httpclient.execute(httpGET);
             @SuppressWarnings("unused")
-            String urlWithTokenHidden = httpGET.getURI().toString().replaceFirst(config.getCommonConfig(PLEX_TOKEN), "__plex_token__");
+            String urlWithTokenHidden = httpGET.getURI().toString().replaceFirst(config.getConfig(PLEX_TOKEN), "__plex_token__");
             logger.nLog("Launched URL command: {0}",  httpGET.getURI().toString());
         } catch (Exception e) {
             logger.nHLog("Some error has happened using the URL <{0}>", plexRefreshURL);
@@ -63,10 +63,10 @@ public class PlexCommandLauncher {
     }
 
     public String getPlexUrlPath2Refresh(String fullDestinationPath) {
-        Pattern p = Pattern.compile(config.getCommonConfig(SONARR_PATHS_STARTER).concat("(.+/.+ \\(\\d{4}\\))"));
+        Pattern p = Pattern.compile(config.getConfig(SONARR_PATHS_STARTER).concat("(.+/.+ \\(\\d{4}\\))"));
         Matcher m = p.matcher(fullDestinationPath);
         if (m.find()) {
-            String pathInPlexDockerStart = config.getCommonConfig(PLEX_SERIES_PATHS_STARTER);
+            String pathInPlexDockerStart = config.getConfig(PLEX_SERIES_PATHS_STARTER);
             return pathInPlexDockerStart.concat(m.group(1));
         }
         return null;
@@ -76,7 +76,7 @@ public class PlexCommandLauncher {
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             HttpUriRequest httpGET = RequestBuilder.get()
                     .setUri(new URI(getPlexSectionsURL()))
-                    .addParameter("X-Plex-Token", config.getCommonConfig(PLEX_TOKEN))
+                    .addParameter("X-Plex-Token", config.getConfig(PLEX_TOKEN))
                     .build();
             try (CloseableHttpResponse httpResponse = httpclient.execute(httpGET)) {
                 final HttpEntity entity = httpResponse.getEntity();
@@ -90,7 +90,7 @@ public class PlexCommandLauncher {
                     }
                 }
             }
-            log("launched url command: "+httpGET.getURI().toString().replaceFirst(config.getCommonConfig(PLEX_TOKEN), "__plex_token__"));
+            log("launched url command: "+httpGET.getURI().toString().replaceFirst(config.getConfig(PLEX_TOKEN), "__plex_token__"));
         } catch (URISyntaxException | IOException e) {
             log("could not refresh plex artist because of "+e.getMessage());
             e.printStackTrace();
@@ -101,15 +101,15 @@ public class PlexCommandLauncher {
     private String getPlexRefreshURL(String fullDestinationPath) {
         String sectionId = sectionResolver.resolveSectionByPath(fullDestinationPath);
         if (sectionId==null) return null;
-        String host = config.getCommonConfig(PLEX_HOST);
-        String uriFormat = config.getCommonConfig(PLEX_SECTION_REFRESH_URI);
+        String host = config.getConfig(PLEX_HOST);
+        String uriFormat = config.getConfig(PLEX_SECTION_REFRESH_URI);
         String uri = uriFormat.replaceFirst("\\{section_id}", sectionId);
         return HTTPS.getMark() + host + uri;
     }
 
     private String getPlexSectionsURL() {
-        String host = HTTPS.getMark() + config.getCommonConfig(PLEX_HOST);
-        String uri = config.getCommonConfig(PLEX_SECTIONS_LIST_URI);
+        String host = HTTPS.getMark() + config.getConfig(PLEX_HOST);
+        String uri = config.getConfig(PLEX_SECTIONS_LIST_URI);
         return host + uri;
     }
 

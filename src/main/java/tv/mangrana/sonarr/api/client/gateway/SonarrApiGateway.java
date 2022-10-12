@@ -19,8 +19,8 @@ public class SonarrApiGateway {
     private final EasyLogger logger;
 
     public SonarrApiGateway(CommonConfigFileLoader<?> config) {
-        apiKey = config.getCommonConfig(SONARR_API_KEY);
-        proxy = APIProxyBuilderSingleton.getSonarrInterface(config.getCommonConfig(SONARR_API_HOST));
+        apiKey = config.getConfig(SONARR_API_KEY);
+        proxy = APIProxyBuilderSingleton.getSonarrInterface(config.getConfig(SONARR_API_HOST));
         logger = new EasyLogger();
     }
 

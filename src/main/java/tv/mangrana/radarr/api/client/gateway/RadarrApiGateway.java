@@ -16,8 +16,8 @@ public class RadarrApiGateway {
     private final RadarrAPIInterface proxy;
 
     public RadarrApiGateway(CommonConfigFileLoader<?> config) {
-        apiKey = config.getCommonConfig(RADARR_API_KEY);
-        proxy = APIProxyBuilderSingleton.getRadarrInterface(config.getCommonConfig(RADARR_API_HOST));
+        apiKey = config.getConfig(RADARR_API_KEY);
+        proxy = APIProxyBuilderSingleton.getRadarrInterface(config.getConfig(RADARR_API_HOST));
     }
 
     public QueueResourcePagingResource getQueue() {

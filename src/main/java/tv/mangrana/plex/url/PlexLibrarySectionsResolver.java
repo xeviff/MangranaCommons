@@ -26,7 +26,7 @@ public class PlexLibrarySectionsResolver {
     }
 
     public String resolveSectionByPath(String fullDestinationPath) {
-        final String plexPathStarter = config.getCommonConfig(PLEX_SERIES_PATHS_STARTER);
+        final String plexPathStarter = config.getConfig(PLEX_SERIES_PATHS_STARTER);
         String keyFolder = fullDestinationPath.replaceFirst(plexPathStarter,"").split("/")[1];
         Document xmlDocument = commandLauncher.retrieveSectionsInfo();
         XPath xPath = XPathFactory.newInstance().newXPath();

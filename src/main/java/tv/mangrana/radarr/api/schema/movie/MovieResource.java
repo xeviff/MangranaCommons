@@ -65,7 +65,7 @@ public class MovieResource {
     @JsonProperty("sortTitle")
     private String sortTitle;
     @JsonProperty("sizeOnDisk")
-    private Integer sizeOnDisk;
+    private Long sizeOnDisk;
     @JsonProperty("status")
     private String status;
     @JsonProperty("overview")
@@ -212,16 +212,16 @@ public class MovieResource {
     }
 
     @JsonProperty("sizeOnDisk")
-    public Integer getSizeOnDisk() {
+    public Long getSizeOnDisk() {
         return sizeOnDisk;
     }
 
     @JsonProperty("sizeOnDisk")
-    public void setSizeOnDisk(Integer sizeOnDisk) {
+    public void setSizeOnDisk(Long sizeOnDisk) {
         this.sizeOnDisk = sizeOnDisk;
     }
 
-    public MovieResource withSizeOnDisk(Integer sizeOnDisk) {
+    public MovieResource withSizeOnDisk(Long sizeOnDisk) {
         this.sizeOnDisk = sizeOnDisk;
         return this;
     }

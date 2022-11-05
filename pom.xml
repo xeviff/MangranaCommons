@@ -90,4 +90,12 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>hack3</id>
+            <name>My self-hosted maven repo</name>
+            <url>https://mavenrepo.hack3.cat/snapshots</url>
+        </repository>
+    </distributionManagement>
+
 </project>

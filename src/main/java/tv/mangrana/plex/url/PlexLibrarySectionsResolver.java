@@ -34,6 +34,7 @@ public class PlexLibrarySectionsResolver {
         String directoryNodeOfLocation = getDirectoryKeyValue(xmlDocument, xPath, startingLocationText);
         if (directoryNodeOfLocation == null) {
             startingLocationText = plexPathStarter.concat("/").concat(keyFolder);
+            Output.log("but going to retry with {0}", startingLocationText);
             return getDirectoryKeyValue(xmlDocument, xPath, startingLocationText);
         } else
             return directoryNodeOfLocation;

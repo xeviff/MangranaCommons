@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -28,14 +28,11 @@ public class FakeYmlLoader {
     @SuppressWarnings("all")
     public static <E extends Enum<E>> EnumMap<E, String> getEnumMapFromFile(File ymlFile, Class<E> enumData, boolean silently) throws IncorrectWorkingReferencesException {
         EnumMap<E, String> enumMap = new EnumMap<>(enumData);
-        Pattern simpleYmlKeyValuePattern = Pattern.compile(".+: .+");
-        try (Stream<String> stream = Files.lines(ymlFile.toPath())) {
-            Map<String, String> fileLines = stream
-                    .filter(keyValueCandidate -> simpleYmlKeyValuePattern
-                            .matcher(keyValueCandidate)
-                            .matches())
-                    .map(s -> s.split(":"))
-                    .collect(Collectors.toMap(e -> e[0], e -> e[1].trim()));
+        try (Stream<String> linesStream = Files.lines(ymlFile.toPath())) {
+            Pattern simpleYmlKeyValuePattern = Pattern.compile(".+: .+");
+            Stream<String> filteredLines = getFilteredLines(simpleYmlKeyValuePattern, linesStream);
+            Map<String, String> fileLines = mapLinesToKeyValue(filteredLines);
+
             Arrays.stream(enumData.getEnumConstants())
                     .forEach(cons ->
                             enumMap.put(cons, fileLines.get(cons.name().toLowerCase()))
@@ -51,6 +48,28 @@ public class FakeYmlLoader {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static Stream<String> getFilteredLines(Pattern simpleYmlKeyValuePattern, Stream<String> stream) {
+        return stream
+                .filter(keyValueCandidate -> simpleYmlKeyValuePattern
+                        .matcher(keyValueCandidate)
+                        .matches()
+                );
+    }
+
+    private static Map<String, String> mapLinesToKeyValue(Stream<String> stringStream) {
+        Map<String, String> keyValueMap = new HashMap<>();
+        stringStream.forEach(line -> {
+            try {
+                String[] keyValue = line.split(":");
+                keyValueMap.put(keyValue[0], keyValue[1].trim());
+            } catch (Exception e) {
+                logger.nHLog("Some problem occurred trying to map line {0} to key-value", line);
+                e.printStackTrace();
+            }
+        });
+        return keyValueMap;
     }
 
 }

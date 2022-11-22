@@ -15,11 +15,15 @@ public class StringCaptor {
     }
 
     public static String getSeasonFolderNameFromSeason(String seasonFolderName) throws IncorrectWorkingReferencesException {
-        String season = Optional.ofNullable(
-                        StringCaptor.getMatchingSubstring(seasonFolderName, "(S\\d{2})"))
-                .orElseThrow(() ->
-                        new IncorrectWorkingReferencesException("Couldn't determinate the season from: "+seasonFolderName));
-        return season.replaceFirst("S", "Temporada ");
+        Optional<String> typicalFormat = Optional.ofNullable(StringCaptor.getMatchingSubstring(seasonFolderName, "(S\\d{2})"));
+        if (typicalFormat.isPresent()) {
+            return typicalFormat.get().replaceFirst("S", "Temporada ");
+        }
+        Optional<String> weirdFormat = Optional.ofNullable(StringCaptor.getMatchingSubstring(seasonFolderName, "(T\\d{1,2})"));
+        if (weirdFormat.isPresent()) {
+            return weirdFormat.get().replaceFirst("T", "Temporada ");
+        }
+        throw new IncorrectWorkingReferencesException("Couldn't determinate the season from: "+seasonFolderName);
     }
 
     public static String getSeasonFolderNameFromEpisode(String episodeFileName) throws IncorrectWorkingReferencesException {

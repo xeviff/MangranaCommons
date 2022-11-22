@@ -3,6 +3,7 @@ package tv.mangrana.utils;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 public class Output {
@@ -14,7 +15,11 @@ public class Output {
         System.out.println(msg);
     }
     public static void log (String msg, Object... params) {
-        log(msg(msg, params));
+        try {
+            log(msg(msg, params));
+        } catch (Exception e) {
+            log("error trying to log with msg="+msg+" and params "+Arrays.toString(params));
+        }
     }
 
     public static void logWithDate(String msg) {

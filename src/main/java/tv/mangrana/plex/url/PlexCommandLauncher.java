@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static tv.mangrana.config.CommonConfigFileLoader.CommonProjectConfiguration.*;
 import static tv.mangrana.utils.Output.log;
@@ -42,8 +40,8 @@ public class PlexCommandLauncher {
 //        new PlexCommandLauncher(new CommonConfigFileLoader()).scanByPath(toRefresh);
 //    }
 
-    public void scanByPath(String fullDestinationPath) {
-        String plexPathToRefresh = getPlexUrlPath2Refresh(fullDestinationPath);
+    public void scanSerieByPath(String fullDestinationPath) {
+        String plexPathToRefresh = getPlexSeriePath2Refresh(fullDestinationPath);
         String plexRefreshURL = getPlexRefreshURL(plexPathToRefresh);
         if (plexRefreshURL==null) return;
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
@@ -62,14 +60,10 @@ public class PlexCommandLauncher {
         }
     }
 
-    public String getPlexUrlPath2Refresh(String fullDestinationPath) {
-        Pattern p = Pattern.compile(config.getConfig(SONARR_PATHS_STARTER).concat("(.+/.+ \\(\\d{4}\\))"));
-        Matcher m = p.matcher(fullDestinationPath);
-        if (m.find()) {
-            String pathInPlexDockerStart = config.getConfig(PLEX_SERIES_PATHS_STARTER);
-            return pathInPlexDockerStart.concat(m.group(1));
-        }
-        return null;
+    public String getPlexSeriePath2Refresh(String fullDestinationPath) {
+        String sonarrPathStarter = config.getConfig(SONARR_PATHS_STARTER);
+        String plexDockerPathStarter = config.getConfig(PLEX_SERIES_PATHS_STARTER);
+        return fullDestinationPath.replaceFirst(sonarrPathStarter, plexDockerPathStarter);
     }
 
     public Document retrieveSectionsInfo() {

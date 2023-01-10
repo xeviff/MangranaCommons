@@ -1,6 +1,7 @@
 package tv.mangrana.jobs;
 
 import tv.mangrana.config.LocalEnvironmentManager;
+import tv.mangrana.exception.JobFileNotMovedException;
 
 import java.io.File;
 
@@ -45,17 +46,17 @@ public abstract class JobFile<E> {
     }
 
 
-    public void markDoing() {
+    public void markDoing() throws JobFileNotMovedException {
         if (jobFile.getAbsolutePath().contains(PATH_TODO.getFolderName())) {
             jobFile = shiftFileFolder(jobFile, PATH_TODO, PATH_DOING);
         }
     }
 
-    public void markDone() {
+    public void markDone() throws JobFileNotMovedException {
         jobFile = shiftFileFolder(jobFile, PATH_DOING, PATH_DONE);
     }
 
-    public void forceMarkDone() {
+    public void forceMarkDone() throws JobFileNotMovedException {
         if (jobFile.getAbsolutePath().contains(PATH_DOING.getFolderName())) {
             jobFile = shiftFileFolder(jobFile, PATH_DOING, PATH_DONE);
         } else if (jobFile.getAbsolutePath().contains(PATH_TODO.getFolderName())) {
@@ -63,7 +64,7 @@ public abstract class JobFile<E> {
         }
     }
 
-    public void driveBack() {
+    public void driveBack() throws JobFileNotMovedException {
         if (jobFile.getAbsolutePath().contains(PATH_DOING.getFolderName())) {
             jobFile = shiftFileFolder(jobFile, PATH_DOING, PATH_TODO);
         }

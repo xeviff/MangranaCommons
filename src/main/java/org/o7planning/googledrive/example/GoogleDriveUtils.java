@@ -21,6 +21,8 @@ import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.List;
 
+import static tv.mangrana.utils.Output.log;
+
 public class GoogleDriveUtils {
 
     private static final String APPLICATION_NAME = "Google Drive API Java Quickstart";
@@ -76,6 +78,7 @@ public class GoogleDriveUtils {
         //
         _driveService = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential) //
                 .setApplicationName(APPLICATION_NAME).build();
+        log("Google Drive service initialized");
         return _driveService;
     }
 

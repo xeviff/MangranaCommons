@@ -1,6 +1,7 @@
 package tv.mangrana.jobs;
 
 import tv.mangrana.config.LocalEnvironmentManager;
+import tv.mangrana.exception.JobFileNotMovedException;
 import tv.mangrana.utils.PathUtils;
 
 import java.io.File;
@@ -24,7 +25,8 @@ public class JobFileManager {
 
     public enum JobFileType {
         SONARR_JOBS("sonarr"),
-        RADARR_JOBS("radarr");
+        RADARR_JOBS("radarr"),
+        TRANSMISSION_JOBS("transmission");
         private final String folderName;
         JobFileType(String folderName) {
             this.folderName=folderName;
@@ -40,7 +42,13 @@ public class JobFileManager {
         List<File> uncompleted = files!=null
                 ? Arrays.asList(files)
                 : Collections.emptyList();
-        uncompleted.forEach(file -> PathUtils.shiftFileFolder(file, PATH_DOING, PATH_TODO));
+        uncompleted.forEach(file -> {
+            try {
+                PathUtils.shiftFileFolder(file, PATH_DOING, PATH_TODO);
+            } catch (JobFileNotMovedException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public static List<File> retrieveJobFiles(String fileIdentifierRegex, JobFileType appType) {

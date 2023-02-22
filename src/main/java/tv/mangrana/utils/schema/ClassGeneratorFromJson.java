@@ -14,7 +14,7 @@ public class ClassGeneratorFromJson {
     public void generateSchema (String url, String pckg, String rootClassName) throws IOException {
         convertJsonToJavaClass(
                 new URL(url),
-                new File("."),
+                new File("./src/main/java"),
                 pckg,
                 rootClassName);
     }

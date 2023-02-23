@@ -9,6 +9,8 @@ import tv.mangrana.utils.EasyLogger;
 import tv.mangrana.utils.Output;
 import tv.mangrana.utils.rest.APIProxyBuilderSingleton;
 
+import java.util.List;
+
 import static tv.mangrana.config.CommonConfigFileLoader.CommonProjectConfiguration.SONARR_API_HOST;
 import static tv.mangrana.config.CommonConfigFileLoader.CommonProjectConfiguration.SONARR_API_KEY;
 
@@ -44,6 +46,18 @@ public class SonarrApiGateway {
         return serie;
     }
 
+    public SonarrSerie getSerieByTvdb(Integer tvDbId) {
+        SonarrSerie serie = null;
+        try {
+            List<SonarrSerie> serieOutput = proxy.serieLookupByTVDBid(tvDbId, apiKey);
+            serie = serieOutput.get(0);
+            logger.nLog("retrieved serie from sonarr with tvdbId "+tvDbId);
+        } catch (Exception e) {
+            logger.nHLog("Error while getSerieByTvdb: {0}", e.getMessage());
+        }
+        return serie;
+    }
+
     public void refreshSerie(Integer seriesId) {
         proxy.refreshSeriesCommand(new RefreshSerieCommand(seriesId), apiKey);
         log("sent Refresh command to Sonarr for the serie with id "+seriesId);
@@ -51,6 +65,10 @@ public class SonarrApiGateway {
 
     public SonarrHistory getHistory () {
         return proxy.getHistory("date", "desc", 200, 1, apiKey);
+    }
+
+    public void updateSerie(SonarrSerie series){
+        proxy.updateSerie(series, series.getId(), apiKey);
     }
 
     private void log (String msg) {

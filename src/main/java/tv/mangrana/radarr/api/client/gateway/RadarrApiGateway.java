@@ -6,6 +6,8 @@ import tv.mangrana.radarr.api.schema.movie.MovieResource;
 import tv.mangrana.radarr.api.schema.queue.QueueResourcePagingResource;
 import tv.mangrana.utils.rest.APIProxyBuilderSingleton;
 
+import java.util.List;
+
 import static tv.mangrana.config.CommonConfigFileLoader.CommonProjectConfiguration.RADARR_API_HOST;
 import static tv.mangrana.config.CommonConfigFileLoader.CommonProjectConfiguration.RADARR_API_KEY;
 import static tv.mangrana.utils.Output.log;
@@ -30,6 +32,10 @@ public class RadarrApiGateway {
         return movie;
     }
 
+    public List<MovieResource> movieLookupByTMDBid (int tmdbId) {
+        return proxy.movieLookupByTMDBid(tmdbId, apiKey);
+    }
+
     public void removeQueueItem(int itemId) {
         proxy.removeQueueItem(itemId, false, apiKey);
         log("removed item from queue successfully: "+itemId);
@@ -38,6 +44,10 @@ public class RadarrApiGateway {
     public void refreshMovie(int movieId) {
         proxy.refreshMoviesCommand(new RefreshMoviesCommand(movieId), apiKey);
         log("refreshed movie with id "+movieId);
+    }
+
+    public void updateMovie(MovieResource movie){
+        proxy.updateMovie(movie, movie.getId(), apiKey);
     }
 
 }

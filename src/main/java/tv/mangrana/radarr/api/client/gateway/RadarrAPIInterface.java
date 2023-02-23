@@ -8,6 +8,7 @@ import tv.mangrana.utils.rest.APIInterface;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * For more information, visit: <a href="https://radarr.video/docs/api/#/Movie/get_api_v3_movie">...</a>
@@ -30,9 +31,20 @@ public interface RadarrAPIInterface extends APIInterface {
     @Consumes({ MediaType.APPLICATION_JSON })
     MovieResource getMovieById(@PathParam("id") int movieId, @QueryParam("apikey") String apikey);
 
+    @GET
+    @Path("/movie")
+    @Produces({ MediaType.APPLICATION_JSON })
+    List<MovieResource> movieLookupByTMDBid(@QueryParam("tmdbId") int tmdbId, @QueryParam("apikey") String apikey);
+
+
     @POST
     @Path("/command")
     @Consumes({ MediaType.APPLICATION_JSON })
     void refreshMoviesCommand(RefreshMoviesCommand command, @QueryParam("apikey") String apikey);
+
+    @PUT
+    @Path("/movie/{id}")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    void updateMovie(MovieResource movie, @PathParam("id") int movieId, @QueryParam("apikey") String apikey);
 
 }

@@ -45,6 +45,7 @@ public class PlexCommandLauncher {
         String plexRefreshURL = getPlexRefreshURL(plexPathToRefresh);
         if (plexRefreshURL==null) return;
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
+
             HttpUriRequest httpGET = RequestBuilder.get()
                     .setUri(new URI(plexRefreshURL))
                     .addParameter("path", plexPathToRefresh)
@@ -68,11 +69,13 @@ public class PlexCommandLauncher {
 
     public Document retrieveSectionsInfo() {
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
+            String plexSectionsURL = getPlexSectionsURL();
             HttpUriRequest httpGET = RequestBuilder.get()
-                    .setUri(new URI(getPlexSectionsURL()))
+                    .setUri(new URI(plexSectionsURL))
                     .addParameter("X-Plex-Token", config.getConfig(PLEX_TOKEN))
                     .build();
             try (CloseableHttpResponse httpResponse = httpclient.execute(httpGET)) {
+
                 final HttpEntity entity = httpResponse.getEntity();
                 if (entity != null) {
                     try (InputStream inputStream = entity.getContent()) {

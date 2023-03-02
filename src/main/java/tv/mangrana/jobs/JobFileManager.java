@@ -26,7 +26,7 @@ public class JobFileManager {
     public enum JobFileType {
         SONARR_JOBS("sonarr"),
         RADARR_JOBS("radarr"),
-        TRANSMISSION_JOBS("transmission");
+        TRANSMISSION_JOBS("transm");
         private final String folderName;
         JobFileType(String folderName) {
             this.folderName=folderName;

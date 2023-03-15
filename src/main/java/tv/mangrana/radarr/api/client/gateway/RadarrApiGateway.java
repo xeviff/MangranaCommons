@@ -50,4 +50,8 @@ public class RadarrApiGateway {
         proxy.updateMovie(movie, movie.getId(), apiKey);
     }
 
+    public void relocateMovie(MovieResource movie){
+        proxy.relocateMovie(movie, movie.getId(), true, apiKey);
+    }
+
 }

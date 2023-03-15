@@ -47,4 +47,9 @@ public interface RadarrAPIInterface extends APIInterface {
     @Consumes({ MediaType.APPLICATION_JSON })
     void updateMovie(MovieResource movie, @PathParam("id") int movieId, @QueryParam("apikey") String apikey);
 
+    @PUT
+    @Path("/movie/{id}")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    void relocateMovie(MovieResource movie, @PathParam("id") int movieId, @QueryParam("moveFiles") boolean moveFiles, @QueryParam("apikey") String apikey);
+
 }

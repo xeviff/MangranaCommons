@@ -16,10 +16,12 @@ public abstract class CommonConfigFileLoader<P extends Enum<P>> {
         SONARR_PATHS_STARTER,
         RADARR_API_HOST,
         RADARR_API_KEY,
+        RADARR_PATHS_STARTER,
         PLEX_HOST,
         PLEX_TOKEN,
         PLEX_SECTIONS_LIST_URI,
         PLEX_SECTION_REFRESH_URI,
+        PLEX_MOVIES_PATHS_STARTER,
         PLEX_SERIES_PATHS_STARTER
     }
     private EnumMap<CommonProjectConfiguration, String> commonConfigurationsMap;

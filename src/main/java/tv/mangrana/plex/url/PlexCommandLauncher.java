@@ -41,7 +41,13 @@ public class PlexCommandLauncher {
 //    }
 
     public void scanSerieByPath(String fullDestinationPath) {
-        String plexPathToRefresh = getPlexSeriePath2Refresh(fullDestinationPath);
+        scanByPath(getPlexSeriePath2Refresh(fullDestinationPath));
+    }
+    public void scanMovieByPath(String fullDestinationPath) {
+        scanByPath(getPlexMoviePath2Refresh(fullDestinationPath));
+    }
+
+    private void scanByPath(String plexPathToRefresh) {
         String plexRefreshURL = getPlexRefreshURL(plexPathToRefresh);
         if (plexRefreshURL==null) return;
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
@@ -63,8 +69,13 @@ public class PlexCommandLauncher {
 
     public String getPlexSeriePath2Refresh(String fullDestinationPath) {
         String sonarrPathStarter = config.getConfig(SONARR_PATHS_STARTER);
-        String plexDockerPathStarter = config.getConfig(PLEX_SERIES_PATHS_STARTER);
-        return fullDestinationPath.replaceFirst(sonarrPathStarter, plexDockerPathStarter);
+        String seriesPlexDockerPathStarter = config.getConfig(PLEX_SERIES_PATHS_STARTER);
+        return fullDestinationPath.replaceFirst(sonarrPathStarter, seriesPlexDockerPathStarter);
+    }
+    public String getPlexMoviePath2Refresh(String fullDestinationPath) {
+        String radarrPathStarter = config.getConfig(RADARR_PATHS_STARTER);
+        String moviesPlexDockerPathStarter = config.getConfig(PLEX_MOVIES_PATHS_STARTER);
+        return fullDestinationPath.replaceFirst(radarrPathStarter, moviesPlexDockerPathStarter);
     }
 
     public Document retrieveSectionsInfo() {

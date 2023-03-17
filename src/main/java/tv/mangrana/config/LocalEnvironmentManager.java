@@ -7,7 +7,7 @@ public class LocalEnvironmentManager {
 
     private LocalEnvironmentManager(){}
 
-    public static final String NAS_ACCESS_FOLDER_FROM_MAC = "Volumes";
+    public static final String PROJECT_ROOT = System.getProperty("user.dir");
 
     public static boolean isLocal () {
         String envVar = System.getenv("ENV");

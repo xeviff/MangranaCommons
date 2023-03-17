@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static tv.mangrana.config.LocalEnvironmentManager.NAS_ACCESS_FOLDER_FROM_MAC;
+import static tv.mangrana.config.LocalEnvironmentManager.PROJECT_ROOT;
 import static tv.mangrana.jobs.JobFile.JobLocation;
 import static tv.mangrana.jobs.JobFile.JobLocation.PATH_DOING;
 import static tv.mangrana.jobs.JobFile.JobLocation.PATH_TODO;
@@ -64,7 +64,7 @@ public class JobFileManager {
 
     public static String getAbsolutePath(JobLocation location, JobFileType appType) {
         String jobsFolder = LocalEnvironmentManager.isLocal()
-                ? addSubFolder(rootFolder(NAS_ACCESS_FOLDER_FROM_MAC), JOBS_FOLDER)
+                ? addSubFolder(rootFolder(PROJECT_ROOT), JOBS_FOLDER)
                 : rootFolder(JOBS_FOLDER);
         String appFolderPath =  addSubFolder(jobsFolder, appType.getFolderName());
         return addSubFolder(appFolderPath, location.getFolderName());

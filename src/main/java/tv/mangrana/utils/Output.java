@@ -16,7 +16,10 @@ public class Output {
     }
     public static void log (String msg, Object... params) {
         try {
-            log(msg(msg, params));
+            if (params.length>1)
+                log(msg(msg, params));
+            else
+                log(msg);
         } catch (Exception e) {
             log("error trying to log with msg="+msg+" and params "+Arrays.toString(params));
         }

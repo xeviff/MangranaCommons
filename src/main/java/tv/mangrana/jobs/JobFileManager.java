@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static tv.mangrana.config.LocalEnvironmentManager.PROJECT_ROOT;
+import static tv.mangrana.config.LocalEnvironmentManager.getLocalMode;
 import static tv.mangrana.jobs.JobFile.JobLocation;
 import static tv.mangrana.jobs.JobFile.JobLocation.PATH_DOING;
 import static tv.mangrana.jobs.JobFile.JobLocation.PATH_TODO;
@@ -21,12 +21,14 @@ public class JobFileManager {
 
     private JobFileManager(){}
 
-    public static final String JOBS_FOLDER = "jobs";
+    static final String JOBS_FOLDER = "jobs";
+    static final String ALT_JOBS_FOLDER = "jobs-1";
 
     public enum JobFileType {
         SONARR_JOBS("sonarr"),
         RADARR_JOBS("radarr"),
         TRANSMISSION_JOBS("transm");
+
         private final String folderName;
         JobFileType(String folderName) {
             this.folderName=folderName;
@@ -35,7 +37,6 @@ public class JobFileManager {
             return folderName;
         }
     }
-
     public static void moveUncompletedJobsToRetry(JobFileType appType) {
         File jobsDir = new File(getAbsolutePath(PATH_DOING, appType));
         File[] files = jobsDir.listFiles();
@@ -64,10 +65,16 @@ public class JobFileManager {
 
     public static String getAbsolutePath(JobLocation location, JobFileType appType) {
         String jobsFolder = LocalEnvironmentManager.isLocal()
-                ? addSubFolder(rootFolder(PROJECT_ROOT), JOBS_FOLDER)
+                ? addSubFolder(rootFolder(LocalEnvironmentManager.getRootPath()), getLocalJobsFolder())
                 : rootFolder(JOBS_FOLDER);
         String appFolderPath =  addSubFolder(jobsFolder, appType.getFolderName());
         return addSubFolder(appFolderPath, location.getFolderName());
     }
 
+
+    static String getLocalJobsFolder() {
+        return getLocalMode().equals(LocalEnvironmentManager.LocalMode.CONTABO)
+                ? ALT_JOBS_FOLDER
+                : JOBS_FOLDER;
+    }
 }

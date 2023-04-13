@@ -23,7 +23,7 @@ public abstract class JobFile<E> {
             return getLocalNameIfNecessary(this);
         }
         private String getLocalNameIfNecessary(JobLocation location) {
-            if (LocalEnvironmentManager.isLocal()
+            if (LocalEnvironmentManager.isLocal() && !LocalEnvironmentManager.isWorkingWithProdFiles()
                     && (location.equals(JobLocation.PATH_TODO) || location.equals(JobLocation.PATH_DOING))) {
                 return LOCAL_WORKING_PATH;
             }

@@ -40,16 +40,25 @@ public class PlexCommandLauncher {
 //        new PlexCommandLauncher(new CommonConfigFileLoader()).scanByPath(toRefresh);
 //    }
 
-    public void scanSerieByPath(String fullDestinationPath) {
-        scanByPath(getPlexSeriePath2Refresh(fullDestinationPath));
+    public boolean scanSerieByPath(String fullDestinationPath) {
+        try {
+            return scanByPath(getPlexSeriePath2Refresh(fullDestinationPath));
+        } catch (Exception e) {
+            return false;
+        }
     }
-    public void scanMovieByPath(String fullDestinationPath) {
-        scanByPath(getPlexMoviePath2Refresh(fullDestinationPath));
+    public boolean scanMovieByPath(String fullDestinationPath) {
+        try {
+            return scanByPath(getPlexMoviePath2Refresh(fullDestinationPath));
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    private void scanByPath(String plexPathToRefresh) {
+    private boolean scanByPath(String plexPathToRefresh) {
+        boolean ok = true;
         String plexRefreshURL = getPlexRefreshURL(plexPathToRefresh);
-        if (plexRefreshURL==null) return;
+        if (plexRefreshURL==null) return false;
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
 
             HttpUriRequest httpGET = RequestBuilder.get()
@@ -64,7 +73,9 @@ public class PlexCommandLauncher {
         } catch (Exception e) {
             logger.nHLog("Some error has happened using the URL <{0}>", plexRefreshURL);
             e.printStackTrace();
+            ok = false;
         }
+        return ok;
     }
 
     public String getPlexSeriePath2Refresh(String fullDestinationPath) {
@@ -85,6 +96,7 @@ public class PlexCommandLauncher {
                     .setUri(new URI(plexSectionsURL))
                     .addParameter("X-Plex-Token", config.getConfig(PLEX_TOKEN))
                     .build();
+
             try (CloseableHttpResponse httpResponse = httpclient.execute(httpGET)) {
 
                 final HttpEntity entity = httpResponse.getEntity();
@@ -107,12 +119,16 @@ public class PlexCommandLauncher {
     }
 
     private String getPlexRefreshURL(String fullDestinationPath) {
-        String sectionId = sectionResolver.resolveSectionByPath(fullDestinationPath);
-        if (sectionId==null) return null;
-        String host = config.getConfig(PLEX_HOST);
-        String uriFormat = config.getConfig(PLEX_SECTION_REFRESH_URI);
-        String uri = uriFormat.replaceFirst("\\{section_id}", sectionId);
-        return HTTPS.getMark() + host + uri;
+        try {
+            String sectionId = sectionResolver.resolveSectionByPath(fullDestinationPath);
+            if (sectionId==null) return null;
+            String host = config.getConfig(PLEX_HOST);
+            String uriFormat = config.getConfig(PLEX_SECTION_REFRESH_URI);
+            String uri = uriFormat.replaceFirst("\\{section_id}", sectionId);
+            return HTTPS.getMark() + host + uri;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private String getPlexSectionsURL() {

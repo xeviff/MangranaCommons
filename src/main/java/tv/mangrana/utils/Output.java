@@ -16,7 +16,7 @@ public class Output {
     }
     public static void log (String msg, Object... params) {
         try {
-            if (params.length>1)
+            if (params.length>0)
                 log(msg(msg, params));
             else
                 log(msg);

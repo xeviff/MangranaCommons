@@ -92,9 +92,9 @@
 
     <distributionManagement>
         <repository>
-            <id>hack3</id>
+            <id>mangrana_repo</id>
             <name>My self-hosted maven repo</name>
-            <url>https://mavenrepo.hack3.cat/snapshots</url>
+            <url>https://mavenrepo.mangrana.tv/snapshots</url>
         </repository>
     </distributionManagement>
 

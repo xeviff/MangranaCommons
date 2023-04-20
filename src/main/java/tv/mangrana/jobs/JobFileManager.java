@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static tv.mangrana.config.LocalEnvironmentManager.LocalMode.CONTABO;
 import static tv.mangrana.config.LocalEnvironmentManager.getLocalMode;
 import static tv.mangrana.jobs.JobFile.JobLocation;
 import static tv.mangrana.jobs.JobFile.JobLocation.PATH_DOING;
@@ -22,7 +23,7 @@ public class JobFileManager {
     private JobFileManager(){}
 
     static final String JOBS_FOLDER = "jobs";
-    static final String ALT_JOBS_FOLDER = "jobs-1";
+    static final String CONTABO_JOBS_FOLDER = "contabo_jobs";
 
     public enum JobFileType {
         SONARR_JOBS("sonarr"),
@@ -73,8 +74,8 @@ public class JobFileManager {
 
 
     static String getLocalJobsFolder() {
-        return getLocalMode().equals(LocalEnvironmentManager.LocalMode.CONTABO)
-                ? ALT_JOBS_FOLDER
+        return CONTABO.equals(getLocalMode())
+                ? CONTABO_JOBS_FOLDER
                 : JOBS_FOLDER;
     }
 }

@@ -1,5 +1,7 @@
 package tv.mangrana.utils;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -36,6 +38,11 @@ public class Output {
 
     public static String msg(String msg, Object... params) {
         return MessageFormat.format(msg, params);
+    }
+
+    public static String formatTitle(String title, int length) {
+        return title.length() > length ? title.substring(0,length-3)+"..."
+                : StringUtils.rightPad(title.concat(" "), length, '.');
     }
 
 }

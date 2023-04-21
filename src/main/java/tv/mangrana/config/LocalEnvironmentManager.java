@@ -16,9 +16,9 @@ public class LocalEnvironmentManager {
 
     public static final String REMOTE_ACCESS_FOLDER_FROM_MAC = "Volumes";
 
-    public static void setLocalMode(String mode) {
+    public static void setLocalMode(LocalMode mode) {
         try {
-            LocalEnvironmentManager.mode = LocalMode.valueOf(mode);
+            LocalEnvironmentManager.mode = mode;
         } catch (IllegalArgumentException ignored) {
         }
     }

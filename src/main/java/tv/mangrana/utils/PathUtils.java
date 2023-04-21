@@ -19,11 +19,11 @@ public class PathUtils {
 
     private PathUtils(){}
 
-    public static String addSubFolder(String parentFolder, String childFolder) {
+    public static String addSubElement(String parentFolder, String childFolder) {
         return parentFolder+ SEPARATOR +childFolder;
     }
     public static String rootFolder(String rootFolderName){
-        return addSubFolder("",rootFolderName);
+        return addSubElement("",rootFolderName);
     }
 
     public static String getParentFromFullPath(String absolutePath){

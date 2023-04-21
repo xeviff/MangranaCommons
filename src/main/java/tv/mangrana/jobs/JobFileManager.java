@@ -15,7 +15,7 @@ import static tv.mangrana.config.LocalEnvironmentManager.getLocalMode;
 import static tv.mangrana.jobs.JobFile.JobLocation;
 import static tv.mangrana.jobs.JobFile.JobLocation.PATH_DOING;
 import static tv.mangrana.jobs.JobFile.JobLocation.PATH_TODO;
-import static tv.mangrana.utils.PathUtils.addSubFolder;
+import static tv.mangrana.utils.PathUtils.addSubElement;
 import static tv.mangrana.utils.PathUtils.rootFolder;
 
 public class JobFileManager {
@@ -24,6 +24,8 @@ public class JobFileManager {
 
     static final String JOBS_FOLDER = "jobs";
     static final String CONTABO_JOBS_FOLDER = "contabo_jobs";
+
+    static final String RESUME_FILE = "jobs.txt";
 
     public enum JobFileType {
         SONARR_JOBS("sonarr"),
@@ -65,11 +67,20 @@ public class JobFileManager {
     }
 
     public static String getAbsolutePath(JobLocation location, JobFileType appType) {
-        String jobsFolder = LocalEnvironmentManager.isLocal()
-                ? addSubFolder(rootFolder(LocalEnvironmentManager.getRootPath()), getLocalJobsFolder())
+        String jobsFolder = getJobsFolder();
+        String appFolderPath =  addSubElement(jobsFolder, appType.getFolderName());
+        return addSubElement(appFolderPath, location.getFolderName());
+    }
+
+    public static String getResumeFile() {
+        String jobsFolder = getJobsFolder();
+        return addSubElement(jobsFolder, RESUME_FILE);
+    }
+
+    private static String getJobsFolder() {
+        return LocalEnvironmentManager.isLocal()
+                ? addSubElement(rootFolder(LocalEnvironmentManager.getRootPath()), getLocalJobsFolder())
                 : rootFolder(JOBS_FOLDER);
-        String appFolderPath =  addSubFolder(jobsFolder, appType.getFolderName());
-        return addSubFolder(appFolderPath, location.getFolderName());
     }
 
 

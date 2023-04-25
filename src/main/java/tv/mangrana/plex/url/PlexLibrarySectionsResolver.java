@@ -1,19 +1,17 @@
 package tv.mangrana.plex.url;
 
 
-import tv.mangrana.config.CommonConfigFileLoader;
-import tv.mangrana.utils.Output;
 import com.sun.org.apache.xerces.internal.dom.DeferredElementImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import tv.mangrana.config.CommonConfigFileLoader;
+import tv.mangrana.utils.Output;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-
-import static tv.mangrana.config.CommonConfigFileLoader.CommonProjectConfiguration.PLEX_SERIES_PATHS_STARTER;
 
 public class PlexLibrarySectionsResolver {
 
@@ -25,15 +23,14 @@ public class PlexLibrarySectionsResolver {
         this.config = config;
     }
 
-    public String resolveSectionByPath(String fullDestinationPath) {
-        final String plexPathStarter = config.getConfig(PLEX_SERIES_PATHS_STARTER);
-        String keyFolder = fullDestinationPath.replaceFirst(plexPathStarter,"").split("/")[1];
+    public String resolveSectionByPath(String fullDestinationPath, String plexMountPath) {
+        String keyFolder = fullDestinationPath.replaceFirst(plexMountPath,"").split("/")[1];
         Document xmlDocument = commandLauncher.retrieveSectionsInfo();
         XPath xPath = XPathFactory.newInstance().newXPath();
-        String startingLocationText = plexPathStarter.concat("/").concat(keyFolder).concat("/");
+        String startingLocationText = plexMountPath.concat("/").concat(keyFolder).concat("/");
         String directoryNodeOfLocation = getDirectoryKeyValue(xmlDocument, xPath, startingLocationText);
         if (directoryNodeOfLocation == null) {
-            startingLocationText = plexPathStarter.concat("/").concat(keyFolder);
+            startingLocationText = plexMountPath.concat("/").concat(keyFolder);
             Output.log("but going to retry with {0}", startingLocationText);
             return getDirectoryKeyValue(xmlDocument, xPath, startingLocationText);
         } else

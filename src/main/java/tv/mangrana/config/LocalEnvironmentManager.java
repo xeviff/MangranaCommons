@@ -9,7 +9,7 @@ public class LocalEnvironmentManager {
 
     static LocalMode mode;
     static {
-        mode = LocalMode.PC;
+        mode = LocalMode.CONTABO;
     }
 
     public static final String PROJECT_ROOT = System.getProperty("user.dir");
@@ -23,7 +23,7 @@ public class LocalEnvironmentManager {
         }
     }
 
-    public static String getRootPath() {
+    public static String getLocalRootPath() {
         return mode.equals(LocalMode.PC) ? PROJECT_ROOT : REMOTE_ACCESS_FOLDER_FROM_MAC;
     }
 

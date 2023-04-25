@@ -77,14 +77,13 @@ public class JobFileManager {
         return addSubElement(jobsFolder, RESUME_FILE);
     }
 
-    private static String getJobsFolder() {
+    public static String getJobsFolder() {
         return LocalEnvironmentManager.isLocal()
-                ? addSubElement(rootFolder(LocalEnvironmentManager.getRootPath()), getLocalJobsFolder())
+                ? addSubElement(rootFolder(LocalEnvironmentManager.getLocalRootPath()), getLocalJobsFolderName())
                 : rootFolder(JOBS_FOLDER);
     }
 
-
-    static String getLocalJobsFolder() {
+    static String getLocalJobsFolderName() {
         return CONTABO.equals(getLocalMode())
                 ? CONTABO_JOBS_FOLDER
                 : JOBS_FOLDER;

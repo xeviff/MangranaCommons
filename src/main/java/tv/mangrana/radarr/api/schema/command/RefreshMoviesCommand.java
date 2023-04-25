@@ -7,7 +7,7 @@ import java.util.List;
 
 public class RefreshMoviesCommand {
     @JsonProperty("name")
-    private final String name = "MoviesSearch";
+    private final String name = "RefreshMovie";
 
     @JsonProperty("movieIds")
     private final List<Integer> moviesIds;

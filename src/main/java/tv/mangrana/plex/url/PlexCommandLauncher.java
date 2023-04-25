@@ -42,22 +42,28 @@ public class PlexCommandLauncher {
 
     public boolean scanSerieByPath(String fullDestinationPath) {
         try {
-            return scanByPath(getPlexSeriePath2Refresh(fullDestinationPath));
+            String sonarrPathStarter = config.getConfig(SONARR_PATHS_STARTER);
+            String plexMountPath = config.getConfig(PLEX_SERIES_PATHS_STARTER);
+            String path2Refresh = fullDestinationPath.replaceFirst(sonarrPathStarter, plexMountPath);
+            return scanByPath(path2Refresh, plexMountPath);
         } catch (Exception e) {
             return false;
         }
     }
     public boolean scanMovieByPath(String fullDestinationPath) {
         try {
-            return scanByPath(getPlexMoviePath2Refresh(fullDestinationPath));
+            String radarrPathStarter = config.getConfig(RADARR_PATHS_STARTER);
+            String plexMountPath = config.getConfig(PLEX_MOVIES_PATHS_STARTER);
+            String pathToRefresh = fullDestinationPath.replaceFirst(radarrPathStarter, plexMountPath);
+            return scanByPath(pathToRefresh, plexMountPath);
         } catch (Exception e) {
             return false;
         }
     }
 
-    private boolean scanByPath(String plexPathToRefresh) {
+    private boolean scanByPath(String plexPathToRefresh, String plexMountPath) {
         boolean ok = true;
-        String plexRefreshURL = getPlexRefreshURL(plexPathToRefresh);
+        String plexRefreshURL = getPlexRefreshURL(plexPathToRefresh, plexMountPath);
         if (plexRefreshURL==null) return false;
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
 
@@ -76,17 +82,6 @@ public class PlexCommandLauncher {
             ok = false;
         }
         return ok;
-    }
-
-    public String getPlexSeriePath2Refresh(String fullDestinationPath) {
-        String sonarrPathStarter = config.getConfig(SONARR_PATHS_STARTER);
-        String seriesPlexDockerPathStarter = config.getConfig(PLEX_SERIES_PATHS_STARTER);
-        return fullDestinationPath.replaceFirst(sonarrPathStarter, seriesPlexDockerPathStarter);
-    }
-    public String getPlexMoviePath2Refresh(String fullDestinationPath) {
-        String radarrPathStarter = config.getConfig(RADARR_PATHS_STARTER);
-        String moviesPlexDockerPathStarter = config.getConfig(PLEX_MOVIES_PATHS_STARTER);
-        return fullDestinationPath.replaceFirst(radarrPathStarter, moviesPlexDockerPathStarter);
     }
 
     public Document retrieveSectionsInfo() {
@@ -118,9 +113,9 @@ public class PlexCommandLauncher {
         return null;
     }
 
-    private String getPlexRefreshURL(String fullDestinationPath) {
+    private String getPlexRefreshURL(String fullDestinationPath, String plexMountPath) {
         try {
-            String sectionId = sectionResolver.resolveSectionByPath(fullDestinationPath);
+            String sectionId = sectionResolver.resolveSectionByPath(fullDestinationPath, plexMountPath);
             if (sectionId==null) return null;
             String host = config.getConfig(PLEX_HOST);
             String uriFormat = config.getConfig(PLEX_SECTION_REFRESH_URI);

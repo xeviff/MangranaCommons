@@ -62,6 +62,11 @@ public class FakeYmlLoader {
         Map<String, String> keyValueMap = new HashMap<>();
         stringStream.forEach(line -> {
             try {
+                int firstPosition = line.indexOf(':');
+                if (firstPosition != line.lastIndexOf(':')) {
+                    line = line.replace(':', '-');
+                    line = line.replaceFirst("-", ":");
+                }
                 String[] keyValue = line.split(":");
                 keyValueMap.put(keyValue[0], keyValue[1].trim());
             } catch (Exception e) {

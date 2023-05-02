@@ -75,7 +75,7 @@ public class GoogleDriveApiGateway {
                         "'"+parent.getId()+"' in parents";
         List<File> children = getChildrenCommonCall(query);
         if (children.isEmpty()) throw new NoElementFoundException("no elements in the list xO");
-        if (children.size() > 1) log("WARNING: more than one element here not expected");
+        if (children.size() > 1) log("WARNING: more than one element here not expected for <{0}> and parent <{1}>", name, parent.getName());
         return children.get(0);
     }
 
@@ -110,6 +110,17 @@ public class GoogleDriveApiGateway {
         newFileReference.setParents(Collections.singletonList(destinationFolderId));
         service.files()
                 .copy(fileId, newFileReference)
+                .setSupportsTeamDrives(true)
+                .execute();
+    }
+
+    public void moveFile(File file, String destinationFolderId, String newName) throws IOException {
+        File newFileReference = new File();
+        newFileReference.setName(newName);
+        service.files()
+                .update(file.getId(), newFileReference)
+                .setAddParents(destinationFolderId)
+                .setRemoveParents(file.getParents().get(0))
                 .setSupportsTeamDrives(true)
                 .execute();
     }

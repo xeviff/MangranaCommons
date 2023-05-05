@@ -54,4 +54,7 @@ public class RadarrApiGateway {
         proxy.relocateMovie(movie, movie.getId(), true, apiKey);
     }
 
+    public List<MovieResource> movieLookupByTitle (String title) {
+        return proxy.movieLookupByTitle(title, apiKey);
+    }
 }

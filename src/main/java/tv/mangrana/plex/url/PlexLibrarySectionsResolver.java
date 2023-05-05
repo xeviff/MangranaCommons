@@ -16,23 +16,28 @@ import javax.xml.xpath.XPathFactory;
 public class PlexLibrarySectionsResolver {
 
     private final PlexCommandLauncher commandLauncher;
-    private final CommonConfigFileLoader<?> config;
+    private Document sectionsInfo;
 
-    public PlexLibrarySectionsResolver(PlexCommandLauncher commandLauncher, CommonConfigFileLoader<?> config) {
+    public PlexLibrarySectionsResolver(PlexCommandLauncher commandLauncher) {
         this.commandLauncher = commandLauncher;
-        this.config = config;
+    }
+
+    private void initSectionsIfNecessary() {
+        if (sectionsInfo==null) {
+            sectionsInfo = commandLauncher.retrieveSectionsInfo();
+        }
     }
 
     public String resolveSectionByPath(String fullDestinationPath, String plexMountPath) {
         String keyFolder = fullDestinationPath.replaceFirst(plexMountPath,"").split("/")[1];
-        Document xmlDocument = commandLauncher.retrieveSectionsInfo();
+        initSectionsIfNecessary();
         XPath xPath = XPathFactory.newInstance().newXPath();
         String startingLocationText = plexMountPath.concat("/").concat(keyFolder).concat("/");
-        String directoryNodeOfLocation = getDirectoryKeyValue(xmlDocument, xPath, startingLocationText);
+        String directoryNodeOfLocation = getDirectoryKeyValue(sectionsInfo, xPath, startingLocationText);
         if (directoryNodeOfLocation == null) {
             startingLocationText = plexMountPath.concat("/").concat(keyFolder);
             Output.log("but going to retry with {0}", startingLocationText);
-            return getDirectoryKeyValue(xmlDocument, xPath, startingLocationText);
+            return getDirectoryKeyValue(sectionsInfo, xPath, startingLocationText);
         } else
             return directoryNodeOfLocation;
     }

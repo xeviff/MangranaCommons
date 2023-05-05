@@ -32,7 +32,7 @@ public class PlexCommandLauncher {
     public PlexCommandLauncher(CommonConfigFileLoader<?> config) {
         this.config = config;
         this.logger = new EasyLogger();
-        this.sectionResolver = new PlexLibrarySectionsResolver(this, config);
+        this.sectionResolver = new PlexLibrarySectionsResolver(this);
     }
 
 //    public static void main(String[] args) throws IncorrectWorkingReferencesException {
@@ -40,28 +40,7 @@ public class PlexCommandLauncher {
 //        new PlexCommandLauncher(new CommonConfigFileLoader()).scanByPath(toRefresh);
 //    }
 
-    public boolean scanSerieByPath(String fullDestinationPath) {
-        try {
-            String sonarrPathStarter = config.getConfig(SONARR_PATHS_STARTER);
-            String plexMountPath = config.getConfig(PLEX_SERIES_PATHS_STARTER);
-            String path2Refresh = fullDestinationPath.replaceFirst(sonarrPathStarter, plexMountPath);
-            return scanByPath(path2Refresh, plexMountPath);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-    public boolean scanMovieByPath(String fullDestinationPath) {
-        try {
-            String radarrPathStarter = config.getConfig(RADARR_PATHS_STARTER);
-            String plexMountPath = config.getConfig(PLEX_MOVIES_PATHS_STARTER);
-            String pathToRefresh = fullDestinationPath.replaceFirst(radarrPathStarter, plexMountPath);
-            return scanByPath(pathToRefresh, plexMountPath);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private boolean scanByPath(String plexPathToRefresh, String plexMountPath) {
+    boolean scanByPath(String plexPathToRefresh, String plexMountPath) {
         boolean ok = true;
         String plexRefreshURL = getPlexRefreshURL(plexPathToRefresh, plexMountPath);
         if (plexRefreshURL==null) return false;

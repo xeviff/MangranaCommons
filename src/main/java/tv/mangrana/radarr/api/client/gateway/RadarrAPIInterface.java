@@ -36,7 +36,6 @@ public interface RadarrAPIInterface extends APIInterface {
     @Produces({ MediaType.APPLICATION_JSON })
     List<MovieResource> movieLookupByTMDBid(@QueryParam("tmdbId") int tmdbId, @QueryParam("apikey") String apikey);
 
-
     @POST
     @Path("/command")
     @Consumes({ MediaType.APPLICATION_JSON })
@@ -52,4 +51,8 @@ public interface RadarrAPIInterface extends APIInterface {
     @Consumes({ MediaType.APPLICATION_JSON })
     void relocateMovie(MovieResource movie, @PathParam("id") int movieId, @QueryParam("moveFiles") boolean moveFiles, @QueryParam("apikey") String apikey);
 
+    @GET
+    @Path("/movie/lookup")
+    @Produces({ MediaType.APPLICATION_JSON })
+    List<MovieResource> movieLookupByTitle(@QueryParam("term") String term, @QueryParam("apikey") String apikey);
 }

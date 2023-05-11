@@ -95,7 +95,12 @@ public class PlexCommandLauncher {
     private String getPlexRefreshURL(String fullDestinationPath, String plexMountPath) {
         try {
             String sectionId = sectionResolver.resolveSectionByPath(fullDestinationPath, plexMountPath);
-            if (sectionId==null) return null;
+            if (sectionId==null) {
+                log("Could not resolve the section of the element in plex for "+fullDestinationPath);
+                return null;
+            } else {
+                log("Captured section <{0}> of the element in plex for {1}", sectionId, fullDestinationPath);
+            }
             String host = config.getConfig(PLEX_HOST);
             String uriFormat = config.getConfig(PLEX_SECTION_REFRESH_URI);
             String uri = uriFormat.replaceFirst("\\{section_id}", sectionId);

@@ -114,15 +114,26 @@ public class GoogleDriveApiGateway {
                 .execute();
     }
 
-    public void moveFile(File file, String destinationFolderId, String newName) throws IOException {
+    public void moveFile(File file, String destinationFolderId, String newFileName) throws IOException {
+        String parentId = getParent(file.getId());
         File newFileReference = new File();
-        newFileReference.setName(newName);
+        newFileReference.setName(newFileName);
         service.files()
                 .update(file.getId(), newFileReference)
+                .setSupportsTeamDrives(true)
                 .setAddParents(destinationFolderId)
-                .setRemoveParents(file.getParents().get(0))
+                .setRemoveParents(parentId)
+                .setFields("id, name, parents")
+                .execute();
+    }
+
+    private String getParent(String fileId) throws IOException {
+        File file = service.files()
+                .get(fileId)
+                .setFields("parents")
                 .setSupportsTeamDrives(true)
                 .execute();
+        return file.getParents().get(0);
     }
 
     public File createFolder(String name, String parentFolderId) throws IOException {

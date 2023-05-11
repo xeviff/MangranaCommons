@@ -36,7 +36,7 @@ public class PlexLibrarySectionsResolver {
         String directoryNodeOfLocation = getDirectoryKeyValue(sectionsInfo, xPath, startingLocationText);
         if (directoryNodeOfLocation == null) {
             startingLocationText = plexMountPath.concat("/").concat(keyFolder);
-            Output.log("but going to retry with {0}", startingLocationText);
+            //Output.log("but going to retry with {0}", startingLocationText);
             return getDirectoryKeyValue(sectionsInfo, xPath, startingLocationText);
         } else
             return directoryNodeOfLocation;
@@ -49,7 +49,7 @@ public class PlexLibrarySectionsResolver {
             Node directoryNodeOfLocation  = candidatesNodes.item(0).getParentNode();
             return ((DeferredElementImpl) directoryNodeOfLocation).getAttribute("key");
         } catch (XPathExpressionException | NullPointerException e) {
-            Output.log("could not resolve the section of the element in plex "+startingLocationText);
+            //Output.log("could not resolve the section of the element in plex "+startingLocationText);
         }
         return null;
     }

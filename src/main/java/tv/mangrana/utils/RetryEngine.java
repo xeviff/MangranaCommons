@@ -36,6 +36,10 @@ public class RetryEngine<D> {
         }
     }
 
+    public enum Action {
+        PERFORMED
+    }
+
     public RetryEngine(String title, int minutesToWait, Consumer<String> logger) {
         this(title, minutesToWait, null, logger);
     }

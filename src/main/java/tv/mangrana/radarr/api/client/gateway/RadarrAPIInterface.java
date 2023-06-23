@@ -1,8 +1,9 @@
 package tv.mangrana.radarr.api.client.gateway;
 
 import tv.mangrana.radarr.api.schema.command.RefreshMoviesCommand;
+import tv.mangrana.radarr.api.schema.movie.Movie2Add;
+import tv.mangrana.radarr.api.schema.movie.MovieFile;
 import tv.mangrana.radarr.api.schema.movie.MovieResource;
-import tv.mangrana.radarr.api.schema.queue.Movie;
 import tv.mangrana.radarr.api.schema.queue.QueueResourcePagingResource;
 import tv.mangrana.utils.rest.APIInterface;
 
@@ -34,7 +35,12 @@ public interface RadarrAPIInterface extends APIInterface {
     @GET
     @Path("/movie")
     @Produces({ MediaType.APPLICATION_JSON })
-    List<MovieResource> movieLookupByTMDBid(@QueryParam("tmdbId") int tmdbId, @QueryParam("apikey") String apikey);
+    List<MovieResource> getMovieByTMDBid(@QueryParam("tmdbId") int tmdbId, @QueryParam("apikey") String apikey);
+
+    @GET
+    @Path("/movie/lookup/tmdb")
+    @Produces({ MediaType.APPLICATION_JSON })
+    MovieResource movieLookupByTMDBid(@QueryParam("tmdbId") int tmdbId, @QueryParam("apikey") String apikey);
 
     @POST
     @Path("/command")
@@ -45,6 +51,26 @@ public interface RadarrAPIInterface extends APIInterface {
     @Path("/movie/{id}")
     @Consumes({ MediaType.APPLICATION_JSON })
     void updateMovie(MovieResource movie, @PathParam("id") int movieId, @QueryParam("apikey") String apikey);
+
+    @POST
+    @Path("/movie")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    void addMovie(Movie2Add movie, @QueryParam("apikey") String apikey);
+
+    @POST
+    @Path("/movie/import")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    void importMovie(MovieResource movie, @QueryParam("apikey") String apikey);
+
+    @GET
+    @Path("/moviefile")
+    @Produces({ MediaType.APPLICATION_JSON })
+    List<MovieFile> getFileByMovieId(@QueryParam("movieId") int movieId, @QueryParam("apikey") String apikey);
+
+    @PUT
+    @Path("/moviefile/{id}")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    void updateFile(MovieFile file, @PathParam("id") int fileId, @QueryParam("apikey") String apikey);
 
     @PUT
     @Path("/movie/{id}")

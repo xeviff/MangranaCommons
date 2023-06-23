@@ -1,6 +1,7 @@
 package tv.mangrana.jobs;
 
 import org.apache.commons.lang.StringUtils;
+import tv.mangrana.exception.IncorrectWorkingReferencesException;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,7 +11,9 @@ import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -26,8 +29,11 @@ public class JobsFileStorage {
     static final String ELEMENT_NAME = "element";
 
     public final String JOB_LINE_FORMAT;
+    private static final String RESUME_FILE = JobFileManager.getResumeFile();
 
-    public JobsFileStorage() {
+    private final List<Map<String, String>> linesInfo;
+
+    public JobsFileStorage() throws IncorrectWorkingReferencesException {
         String preFormat = "{COMPLETED_DATE}: {5} | {JOB_TYPE}: {0} | {HASH}: {1} | {ARR_ID}: {2} | {INTERNET_DB_ID}: {3} | {ELEMENT_NAME}: {4}";
         JOB_LINE_FORMAT = preFormat
                 .replace("{COMPLETED_DATE}", COMPLETED_DATE)
@@ -36,8 +42,36 @@ public class JobsFileStorage {
                 .replace("{ARR_ID}", ARR_ID)
                 .replace("{INTERNET_DB_ID}", INTERNET_DB_ID)
                 .replace("{ELEMENT_NAME}", ELEMENT_NAME);
+
+        linesInfo = getInfoFromFile();
     }
-    String resumeFile = JobFileManager.getResumeFile();
+
+    private List<Map<String, String>> getInfoFromFile() throws IncorrectWorkingReferencesException {
+        List<Map<String, String>> newLinesInfo = new ArrayList<>();
+        try (Stream<String> linesStream = Files.lines(Paths.get(RESUME_FILE))) {
+            linesStream
+                    .filter(probableLine -> StringUtils.isNotEmpty(probableLine) && probableLine.contains("|"))
+                    .forEach(line -> newLinesInfo.add(line2Map(line)));
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IncorrectWorkingReferencesException("A problem occurred when trying to get jobs file info");
+        }
+        return newLinesInfo;
+    }
+
+    private Map<String, String> line2Map(String line) {
+        Map<String, String> mappedLine = new HashMap<>();
+        String[] infoList = line.split("\\|");
+        for (String elementInfo : infoList) {
+            if (!elementInfo.trim().startsWith(COMPLETED_DATE)) {
+                String[] fieldValue = elementInfo.split(":");
+                String field = fieldValue[0].trim();
+                String value = fieldValue[1].trim();
+                mappedLine.put(field, value);
+            }
+        }
+        return mappedLine;
+    }
 
     public void persistCompleted(String type, String downloadId, int arrId, int iId, String element, LocalDateTime time){
         String jobLine = MessageFormat.format(JOB_LINE_FORMAT,
@@ -55,7 +89,7 @@ public class JobsFileStorage {
     }
 
     void addLine(String jobLine) {
-        try (FileWriter fw = new FileWriter(resumeFile, true);
+        try (FileWriter fw = new FileWriter(RESUME_FILE, true);
              PrintWriter pw = new PrintWriter(fw)) {
 
             pw.println(jobLine);
@@ -65,31 +99,11 @@ public class JobsFileStorage {
     }
 
     public String getIIDByElement(String element) {
-        try (Stream<String> linesStream = Files.lines(Paths.get(resumeFile))) {
-            return linesStream
-                    .map(this::line2Map)
-                    .filter(mappedLine -> mappedLine.get(ELEMENT_NAME).equals(element))
-                    .findAny()
-                    .map(found -> found.get(INTERNET_DB_ID))
-                    .orElse(null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private Map<String, String> line2Map(String line) {
-        Map<String, String> mappedLine = new HashMap<>();
-        String[] infoList = line.split("\\|");
-        for (String elementInfo : infoList) {
-            if (!elementInfo.trim().startsWith(COMPLETED_DATE)) {
-                String[] fieldValue = elementInfo.split(":");
-                String field = fieldValue[0].trim();
-                String value = fieldValue[1].trim();
-                mappedLine.put(field, value);
-            }
-        }
-        return mappedLine;
+        return linesInfo.stream()
+                .filter(mappedLine -> element.equals(mappedLine.get(ELEMENT_NAME)))
+                .findAny()
+                .map(found -> found.get(INTERNET_DB_ID))
+                .orElse(null);
     }
 
     String formatTime(LocalDateTime time) {

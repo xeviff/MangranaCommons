@@ -6,7 +6,7 @@
 
     <groupId>tv.mangrana</groupId>
     <artifactId>mangrana-commons</artifactId>
-    <version>4.1.3</version>
+    <version>6.0.0</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -41,25 +41,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
             <version>4.4</version>
-        </dependency>
-
-        <!-- Google API -->
-        <dependency>
-            <groupId>com.google.apis</groupId>
-            <artifactId>google-api-services-drive</artifactId>
-            <version>v3-rev20220508-1.32.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.api-client</groupId>
-            <artifactId>google-api-client</artifactId>
-            <version>1.35.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.oauth-client</groupId>
-            <artifactId>google-oauth-client-jetty</artifactId>
-            <version>1.34.1</version>
         </dependency>
 
         <!-- UT -->

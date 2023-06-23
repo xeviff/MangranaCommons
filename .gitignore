@@ -2,5 +2,3 @@
 /target/
 .DS_Store
 /MangranaCommons.iml
-/tokens/
-/src/main/resources/credentials.json

@@ -34,4 +34,11 @@ public class StringCaptor {
         return "Temporada ".concat(episodeInfo.substring(1,3));
     }
 
+    public static int getTMDBFromFile(String path) throws IncorrectWorkingReferencesException {
+        String tmdbId = Optional.ofNullable(
+                            StringCaptor.getMatchingSubstring(path.contains("/")?path.substring(path.lastIndexOf('/')):path, "\\{tmdb-(.*)\\}"))
+                            .orElseThrow(() -> new IncorrectWorkingReferencesException("Couldn't find tmdb from: "+path));
+        return Integer.parseInt(tmdbId);
+    }
+
 }

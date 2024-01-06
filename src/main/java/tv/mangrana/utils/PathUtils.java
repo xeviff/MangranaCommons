@@ -1,17 +1,12 @@
 package tv.mangrana.utils;
 
 
-
-import tv.mangrana.exception.JobFileNotMovedException;
-import tv.mangrana.jobs.JobFile;
-
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
+import java.util.Optional;
 
 public class PathUtils {
 
@@ -36,27 +31,6 @@ public class PathUtils {
 
     public static String getCurrentFromFullPath(String absolutePath) {
         return absolutePath.substring(absolutePath.lastIndexOf(SEPARATOR)+1);
-    }
-
-    public static File shiftFileFolder(File jobFile, JobFile.JobLocation folderOrigin, JobFile.JobLocation folderDestination) throws JobFileNotMovedException {
-        try {
-            Path newPath = Files.move(
-                    jobFile.toPath()
-                    , Paths.get(jobFile.getAbsolutePath()
-                            .replaceFirst(folderOrigin.getFolderName(), folderDestination.getFolderName())));
-            log(Output.msg("moved job file <{2}> from -{0}- to -{1}-", folderOrigin, folderDestination, jobFile.getAbsolutePath()));
-            return newPath.toFile();
-        } catch (FileAlreadyExistsException e) {
-            log("File already exists on destination and will be deleted from source");
-            boolean deleted = jobFile.delete();
-            if (!deleted) throw new JobFileNotMovedException("Could not move the file because exists on destination and either delete it from source");
-        } catch (IOException e) {
-            log(Output.msg("COULD NOT MOVE file {2} from -{0}- to -{1}-", folderOrigin, folderDestination, jobFile.getAbsolutePath()));
-            e.printStackTrace();
-            boolean renamed = jobFile.renameTo(new File(jobFile.getName() + "_handled"));
-            if (!renamed) throw new JobFileNotMovedException("Could not move the file and either rename it");
-        }
-        return jobFile;
     }
 
     public static int compareFileCreationDate (File o1, File o2) {

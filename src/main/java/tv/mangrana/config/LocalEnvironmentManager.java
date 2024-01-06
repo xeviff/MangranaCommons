@@ -5,11 +5,11 @@ import org.apache.commons.lang.StringUtils;
 
 public class LocalEnvironmentManager {
 
-    public enum LocalMode {NAS, PC, CONTABO}
+    public enum LocalMode {NAS, PC}
 
     static LocalMode mode;
     static {
-        mode = LocalMode.CONTABO;
+        mode = LocalMode.NAS;
     }
 
     public static final String PROJECT_ROOT = System.getProperty("user.dir");
@@ -35,7 +35,7 @@ public class LocalEnvironmentManager {
     }
 
     public static boolean isWorkingWithProdFiles () {
-        return mode.equals(LocalMode.CONTABO) || !isLocal();
+        return mode.equals(LocalMode.NAS) || !isLocal();
     }
 
     public static LocalMode getLocalMode() {

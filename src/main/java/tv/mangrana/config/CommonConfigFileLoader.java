@@ -11,6 +11,7 @@ public abstract class CommonConfigFileLoader<P extends Enum<P>> {
     private static final String CONFIG_FOLDER = "/config";
 
     public enum CommonProjectConfiguration {
+        FILEBOT_PATHS_STARTER,
         SONARR_API_HOST,
         SONARR_API_KEY,
         SONARR_PATHS_STARTER,
